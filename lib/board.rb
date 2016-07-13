@@ -1,4 +1,4 @@
-require './bit_set_naive.rb'
+require './lib/bit_set_simple.rb'
 class Board < Delegator
 
   BIT_SET_KLASS = BitSetSimple
