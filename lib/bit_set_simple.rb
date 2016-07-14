@@ -45,6 +45,12 @@ class BitSetSimple
     (@value << n) & @set_mask
   end
 
+  def ~
+    bit_set = BitSetSimple.new(@size)
+    bit_set.value = ~@value
+    bit_set
+  end
+
   def all_set?
     @value == (1 << @size ) - 1
   end
@@ -52,7 +58,6 @@ class BitSetSimple
   def all_clear?
     @value == 0
   end
-
 
   def to_s
     @value.to_s(2).rjust(@size, '0')

@@ -12,16 +12,20 @@ class MineField
     @clicked = Board.new(row, col)
     @bombs = initialize_bomb_board
     @bombs_in_vinicity = initialize_bombs_in_vinicity
-    @won = true
+    @victory = true
     @bomb_clicked = nil
+  end
+
+  def still_playing?
+    !finished?
   end
 
   def finished?
     !@bomb_clicked.nil? || (@clicked | @bombs).all_set?
   end
 
-  def won?
-    @won if finished?
+  def victory?
+    @victory if finished?
   end
 
   def flag(i, j)
@@ -35,9 +39,8 @@ class MineField
     end
 
     if bombs[i, j] == 1
-      clicked[i, j] = 1
       @bomb_clicked = [i, j]
-      @won = false
+      @victory = false
       return true
     end
 
@@ -45,20 +48,49 @@ class MineField
     return true
   end
 
+  def board_state(options={})
+    state = {
+      row: @row,
+      col: @col,
+      still_playing: still_playing?,
+      victory: victory?,
+      not_discovered: ~@clicked,
+      bomb_clicked: @bomb_clicked,
+      bombs_vinicity_state: bombs_vinicity_state,
+      flags: @flags.table
+    }
+    state[:bombs] if options[:xray] && finished?
+    state
+  end
+
   #private
+
+  def bombs_vinicity_state
+    bombs_state = {}
+    @row.times.each do |i|
+      @col.times.each do |j|
+        if @clicked[i, j] == 1  && @bombs_in_vinicity[i][j] > 0
+          bombs_state[[i,j]] = @bombs_in_vinicity[i][j]
+        end
+      end
+    end
+    bombs_state
+  end
+
   def propagate_discovery(i, j)#point?
-    return if @bombs[i, j] == 1 || @clicked[i, j] == 1
+    return if @bombs[i, j] == 1 || @clicked[i, j] == 1 ||
+      @flags[i, j] == 1
     @clicked[i, j] = 1
-    return if has_bombs?(i, j)
+    return if has_bombs_or_flags?(i, j) ||
     @bombs.loop_neighbors(i, j) do |x, y|
       propagate_discovery(x, y)
     end
   end
 
-  def has_bombs?(i,j)
+  def has_bombs_or_flags?(i,j)
     point = S_POINT.new(i, j)
     block_mask = get_block_mask(point)
-    !(bombs & block_mask).all_clear?
+    !((@bombs|@flags) & block_mask).all_clear?
   end
 
   def get_block_mask(point)

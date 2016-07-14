@@ -39,7 +39,7 @@ describe MineField do
       it 'should be finished in one play' do
         expect(subject.play(0,0)).to be_truthy
         expect(subject).to be_finished
-        expect(subject).to be_won
+        expect(subject).to be_victory
       end
     end
 
@@ -83,7 +83,7 @@ describe MineField do
 
         it 'should lose game' do
           expect(subject.play(2,0)).to be_truthy
-          expect(subject).to_not be_won
+          expect(subject).to_not be_victory
           expect(subject).to  be_finished
         end
       end
