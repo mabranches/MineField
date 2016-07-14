@@ -1,6 +1,13 @@
 class Printer::Terminal < Printer
-  def print_state
-    print to_s
+
+  def legend
+    %Q[
+      C : Clear space
+      F : Flag
+      M : Mine
+      . : Undiscovered
+      Number : Number of mines around cel
+    ]
   end
 
   def to_s
@@ -9,11 +16,11 @@ class Printer::Terminal < Printer
       @col.times.each do |j|
         str << case
         when  @bombs && @bombs[i, j] == 1
-          'B'
+          'M'
         when @flags[i, j] == 1
           'F'
         when @bomb_clicked == [i, j]
-          'B'
+          'M'
         when @not_discovered[i, j] == 1
           '.'
         when @bombs_vinicity_state[[i, j]]

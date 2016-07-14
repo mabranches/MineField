@@ -1,5 +1,9 @@
 class Printer
 
+  def print_state
+    print to_s
+  end
+
   def initialize(state)
     @row = state[:row]
     @col = state[:col]
