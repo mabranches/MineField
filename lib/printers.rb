@@ -15,3 +15,4 @@ class Printer
   end
 end
 require './lib/printers/terminal.rb'
+require './lib/printers/html.rb'

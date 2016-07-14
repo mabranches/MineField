@@ -37,7 +37,7 @@ class Printer::Html < Printer
       end
       str << "</tr>"
     end
-    str"</table>"
+    str << "</table>"
     str
   end
 end
