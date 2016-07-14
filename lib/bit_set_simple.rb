@@ -53,13 +53,14 @@ class BitSetSimple
     @value == 0
   end
 
-  def set_random(n)
-    @value = (['0']*(@size - n) + ['1'] * n).
-      shuffle.join.to_i 2
-  end
 
   def to_s
     @value.to_s(2).rjust(@size, '0')
+  end
+
+  def self.random(n, size)
+    (['0']*(size - n) + ['1'] * n).
+      shuffle.join.to_i 2
   end
 
   private

@@ -22,6 +22,10 @@ class Board < Delegator
     @table[pos(i, j)]
   end
 
+  def set_random(n)
+    @table.value = BIT_SET_KLASS.random(n, @row * @col)
+  end
+
   def print
     table_str = @table.to_s
 
