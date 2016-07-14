@@ -60,7 +60,14 @@ class BitSetSimple
   end
 
   def to_s
-    @value.to_s(2).rjust(@size, '0')
+    if @value >= 0
+      return @value.to_s(2).rjust(@size, '0')
+    end
+    result = ""
+    @size.times.each do |i|
+      result = @value[i].to_s + result
+    end
+    result
   end
 
   def self.random(n, size)
