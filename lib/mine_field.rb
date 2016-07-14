@@ -33,6 +33,7 @@ class MineField
   end
 
   def play(i, j)
+    return false if finished?
     if @clicked[i, j] == 1 || @flags[i, j] == 1 ||
       !valid_point?(i, j)
       return false
