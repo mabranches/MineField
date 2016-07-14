@@ -29,7 +29,7 @@ class MineField
   end
 
   def flag(i, j)
-    @flags[i, j] = 1
+    @flags[i, j] = @flags[i, j] ^ 1
   end
 
   def play(i, j)
@@ -49,17 +49,19 @@ class MineField
   end
 
   def board_state(options={})
+    not_discovered = Board.new(@row, @col)
+    not_discovered.table = ~@clicked
     state = {
       row: @row,
       col: @col,
       still_playing: still_playing?,
       victory: victory?,
-      not_discovered: ~@clicked,
+      not_discovered: not_discovered,
       bomb_clicked: @bomb_clicked,
       bombs_vinicity_state: bombs_vinicity_state,
-      flags: @flags.table
+      flags: @flags
     }
-    state[:bombs] if options[:xray] && finished?
+    state[:bombs] = @bombs if options[:xray] && finished?
     state
   end
 
