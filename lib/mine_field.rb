@@ -1,9 +1,9 @@
 require 'byebug'
-require './board.rb'
+require './lib/board.rb'
 class MineField
   S_POINT = Struct.new(:i, :j)
   MASK_ROW = (1 << 3) -1 #11
-  attr_accessor :bombs, :clicked, :flags, :bombs_in_vinicity
+  attr_accessor :bombs, :clicked, :flags, :bomb_clicked, :bombs_in_vinicity
   def initialize(row, col, n_bombs)
     @row = row
     @col = col
@@ -24,8 +24,16 @@ class MineField
     @won if finished?
   end
 
+  def flag(i, j)
+    @flags[i, j] = 1
+  end
+
   def play(i, j)
-    return false if @clicked[i, j] == 1 || @flags[i, j] == 1
+    if @clicked[i, j] == 1 || @flags[i, j] == 1 ||
+      !valid_point?(i, j)
+      return false
+    end
+
     if bombs[i, j] == 1
       clicked[i, j] = 1
       @bomb_clicked = [i, j]
@@ -79,9 +87,14 @@ class MineField
     point.j == @col -1 || point.j == 0
   end
 
+  def valid_point?(i, j)
+    i >= 0 && i < @row &&
+    j >= 0 && j < @col
+  end
+
   def initialize_bomb_board
     board = Board.new(@row, @col)
-    board.table.set_random(@n_bombs)
+    board.set_random(@n_bombs)
     board
   end
 
