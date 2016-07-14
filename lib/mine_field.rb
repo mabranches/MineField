@@ -1,5 +1,7 @@
 require 'byebug'
 require './lib/board.rb'
+require './lib/printers.rb'
+
 class MineField
   S_POINT = Struct.new(:i, :j)
   MASK_ROW = (1 << 3) -1 #11
