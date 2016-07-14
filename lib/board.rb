@@ -29,8 +29,8 @@ class Board < Delegator
   def print
     table_str = @table.to_s
 
-    (0..(@row - 1)).each do |i|
-      puts table_str[(@col * i)..(@col * i + @col-1)]
+    (@row - 1).downto(0).each do |i|
+      puts table_str[(@col * i)..(@col * i + @col-1)].reverse
     end
   end
 
