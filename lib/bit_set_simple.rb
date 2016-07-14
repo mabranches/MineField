@@ -20,25 +20,11 @@ class BitSetSimple
   end
 
   def &(mask)
-    bit_set = BitSetSimple.new(@size)
-    case mask
-    when Fixnum, Bignum
-      bit_set.value = @value & mask
-    else
-      bit_set.value = @value & mask.value
-    end
-    bit_set
+    oper_aux(:&, mask)
   end
 
   def |(mask)
-    bit_set = BitSetSimple.new(@size)
-    case mask
-    when Fixnum, Bignum
-      bit_set.value = @value | mask
-    else
-      bit_set.value = @value | mask.value
-    end
-    bit_set
+    oper_aux(:|, mask)
   end
 
   def <<(n)
@@ -76,6 +62,17 @@ class BitSetSimple
   end
 
   private
+    def oper_aux(oper, mask)
+      bit_set = BitSetSimple.new(@size)
+      case mask
+      when Fixnum, Bignum
+        bit_set.value = @value.send(oper, mask)
+      else
+        bit_set.value = @value.send(oper, mask.value)
+      end
+      bit_set
+    end
+
     def set_bit(bit)
       @value |= 1 << bit;
     end

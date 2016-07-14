@@ -49,7 +49,6 @@ describe MineField do
         it 'should propagate play' do
           expect(subject.play(0, 0)).to be_truthy
           expect(subject).to_not be_finished
-          byebug
           expect(Printer::Terminal.new(subject.board_state).to_s).
             to eq(%Q[CCCCCCC
                      11CCC11
