@@ -13,31 +13,28 @@ class Printer::Html < Printer
     ]
   end
 
-  def to_s
-    str = "<table>"
-    @row.times.each do |i|
-      str << "<tr>"
-      @col.times.each do |j|
-        str<<"<td>"
-        str << case
-        when  @bombs && @bombs[i, j] == 1
-          'M'
-        when @flags[i, j] == 1
-          'F'
-        when @bomb_clicked == [i, j]
-          'M'
-        when @not_discovered[i, j] == 1
-          '.'
-        when @bombs_vinicity_state[[i, j]]
-          @bombs_vinicity_state[[i, j]].to_s
-        else
-          'C'
-        end
-        str << "</td>"
-      end
-      str << "</tr>"
+  private
+    def start_list
+      '<table>'
     end
-    str << "</table>"
-    str
-  end
+
+    def end_list
+      '</table>'
+    end
+
+    def start_line
+      '<tr>'
+    end
+
+    def end_line
+      '</tr>'
+    end
+
+    def start_cell
+      '<td>'
+    end
+
+    def end_cell
+      '</td>'
+    end
 end
