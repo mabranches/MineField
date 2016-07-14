@@ -10,6 +10,7 @@ class MineField
     @n_bombs = n_bombs
     @flags = Board.new(row, col)
     @clicked = Board.new(row, col)
+    @mine_mask = MineMask.new(col)
     @bombs = initialize_bomb_board
     @bombs_in_vinicity = initialize_bombs_in_vinicity
     @victory = true
@@ -92,35 +93,10 @@ class MineField
 
   def has_bombs_or_flags?(i,j)
     point = S_POINT.new(i, j)
-    block_mask = get_block_mask(point)
-    !((@bombs|@flags) & block_mask).all_clear?
+    mask = @mine_mask.mask(point)
+    !((@bombs|@flags) & mask).all_clear?
   end
 
-  def get_block_mask(point)
-    line_mask = get_line_mask(point)
-    block_mask = 0
-    (-1..1).each do |pos|
-      shift_line = point.i + pos
-      next if shift_line < 0
-      block_mask |= line_mask << shift_line * @col
-    end
-    block_mask
-  end
-
-  def get_line_mask(point)
-    mask = get_base_mask(point)
-    mask << [0, point.j - 1].max
-  end
-
-  def get_base_mask(point)
-    mask = MASK_ROW
-    mask >>= 1 if on_border?(point)
-    mask
-  end
-
-  def on_border?(point)
-    point.j == @col -1 || point.j == 0
-  end
 
   def valid_point?(i, j)
     i >= 0 && i < @row &&
@@ -148,5 +124,38 @@ class MineField
       end
     end
     bombs_in_vinicity
+  end
+
+  class MineMask
+    def initialize(col)
+      @col = col
+    end
+
+    def mask(point)
+      line_mask = line_mask(point)
+      mask = 0
+      (-1..1).each do |pos|
+        shift_line = point.i + pos
+        next if shift_line < 0
+        mask |= line_mask << shift_line * @col
+      end
+      mask
+    end
+
+    def line_mask(point)
+      mask = base_mask(point)
+      mask << [0, point.j - 1].max
+    end
+
+    def base_mask(point)
+      mask = MASK_ROW
+      mask >>= 1 if on_border?(point)
+      mask
+    end
+
+    def on_border?(point)
+      point.j == @col -1 || point.j == 0
+    end
+
   end
 end
